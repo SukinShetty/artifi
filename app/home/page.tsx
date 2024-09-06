@@ -18,28 +18,26 @@ export default function AdvancedTextToImageGenerator() {
 
   const generateImage = useCallback(async () => {
     if (text.trim() === '') {
-      setError('Please enter some text to generate an image.')
-      return
+      setError('Please enter some text to generate an image.');
+      return;
     }
     
-    setIsLoading(true)
-    setError(null)
+    setIsLoading(true);
+    setError(null);
 
     try {
       const response = await fetch('/api/generate-image', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ prompt: text }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: text })
       });
-
+      
       if (!response.ok) {
-        throw new Error('Failed to generate image');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to generate image');
       }
-
+      
       const data = await response.json();
-
       if (data.imageUrl) {
         setImageUrl(data.imageUrl);
         console.log('Image URL set:', data.imageUrl);
@@ -47,7 +45,7 @@ export default function AdvancedTextToImageGenerator() {
         throw new Error('No image URL found in the response');
       }
     } catch (error) {
-      console.error('Error generating image:', error);
+      console.error('Detailed error:', error);
       setError(error instanceof Error ? error.message : 'An unknown error occurred');
     } finally {
       setIsLoading(false);
@@ -148,15 +146,17 @@ export default function AdvancedTextToImageGenerator() {
           </div>
         )}
         {imageUrl && (
-          <div className="mt-4 relative w-full aspect-[3/2]">
-            <Image
-              src={imageUrl}
-              alt="Generated Image"
-              fill
-              style={{ objectFit: 'contain' }}
-              className={`rounded-md shadow-md filter-${tone}`}
-            />
-            <Button onClick={downloadImage} className="mt-2">Download Image</Button>
+          <div className="mt-4 space-y-2">
+            <div className="relative w-full aspect-[3/2]">
+              <Image
+                src={imageUrl}
+                alt="Generated Image"
+                fill
+                style={{ objectFit: 'contain' }}
+                className={`rounded-md shadow-md filter-${tone}`}
+              />
+            </div>
+            <Button onClick={downloadImage} className="w-full">Download Image</Button>
           </div>
         )}
         {error && (
