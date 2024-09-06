@@ -4,7 +4,7 @@ import { useState, useRef } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
+import Image from 'next/image'
 
 export default function Artifitexttoimagegenrator() {
   const [text, setText] = useState('')
@@ -72,20 +72,24 @@ export default function Artifitexttoimagegenrator() {
           />
         </div>
         {uploadedImage && (
-          <div className="mt-4">
-            <img
+          <div className="mt-4 relative w-full h-64">
+            <Image
               src={uploadedImage}
               alt="Uploaded Image"
-              className="w-full h-auto rounded-md shadow-md"
+              layout="fill"
+              objectFit="contain"
+              className="rounded-md shadow-md"
             />
           </div>
         )}
         {imageUrl && (
-          <div className="mt-4">
-            <img
+          <div className="mt-4 relative w-full h-64">
+            <Image
               src={imageUrl}
               alt="Generated Image"
-              className="w-full h-auto rounded-md shadow-md"
+              layout="fill"
+              objectFit="contain"
+              className="rounded-md shadow-md"
             />
           </div>
         )}

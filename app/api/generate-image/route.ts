@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server';
 import Replicate from 'replicate';
 
+interface ReplicateOutput {
+  [index: number]: string;
+}
+
 export async function POST(request: Request) {
   const { prompt } = await request.json();
 
@@ -20,9 +24,9 @@ export async function POST(request: Request) {
           prompt: prompt
         }
       }
-    );
+    ) as ReplicateOutput;
 
-    if (!output || typeof output !== 'object' || !Array.isArray(output)) {
+    if (!Array.isArray(output) || output.length === 0) {
       throw new Error('Unexpected output format from Replicate API');
     }
 
@@ -35,6 +39,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ imageUrl });
   } catch (error) {
     console.error('Error generating image:', error);
-    return NextResponse.json({ error: 'Failed to generate image' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Failed to generate image', details: (error as Error).message },
+      { status: 500 }
+    );
   }
 }
