@@ -18,9 +18,16 @@ export async function POST(request: Request) {
       { input: { prompt } }
     );
 
-    return NextResponse.json({ imageUrl: output[0] });
+    if (Array.isArray(output) && output.length > 0) {
+      return NextResponse.json({ imageUrl: output[0] });
+    } else {
+      throw new Error('Unexpected output format from Replicate API');
+    }
   } catch (error) {
     console.error('Error generating image:', error);
-    return NextResponse.json({ error: 'Failed to generate image' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Failed to generate image' }, 
+      { status: 500 }
+    );
   }
 }

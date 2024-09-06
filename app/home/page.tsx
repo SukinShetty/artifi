@@ -148,13 +148,13 @@ export default function AdvancedTextToImageGenerator() {
           </div>
         )}
         {imageUrl && (
-          <div className="mt-4">
+          <div className="mt-4 relative w-full aspect-[3/2]">
             <Image
               src={imageUrl}
               alt="Generated Image"
-              width={500}
-              height={300}
-              className={`w-full h-auto rounded-md shadow-md filter-${tone}`}
+              fill
+              style={{ objectFit: 'contain' }}
+              className={`rounded-md shadow-md filter-${tone}`}
             />
             <Button onClick={downloadImage} className="mt-2">Download Image</Button>
           </div>
